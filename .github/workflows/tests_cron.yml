@@ -1,6 +1,8 @@
-name: Test
+name: Test (PyPI)
 
-on: [push, pull_request]
+on: push
+  # schedule:
+  #   - cron: "0 18 * * 5"
 
 jobs:
   test:
@@ -25,5 +27,5 @@ jobs:
       - run: pip install pytest
       - run: pip install "${{ matrix.tensorflow }}"
       - uses: actions/checkout@v2
-      - run: pip install .
+      - run: pip install csbdeep
       - run: pytest -v --durations=50

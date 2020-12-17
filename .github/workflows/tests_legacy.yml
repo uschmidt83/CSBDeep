@@ -1,6 +1,9 @@
 name: Test (Legacy)
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   test-legacy:
@@ -29,17 +32,17 @@ jobs:
             tensorflow: "tensorflow<1.12"
             keras: "keras==2.2.5"
           - python-version: 3.6
-            # tensorflow 1.10 requires numpy <= 1.14.5, which causes problems -> not supported
+            # true at some point in the past: tensorflow 1.10 requires numpy <= 1.14.5, which causes problems -> not supported
             # https://github.com/tensorflow/tensorflow/blob/v1.10.1/tensorflow/tools/pip_package/setup.py#L54
             tensorflow: "tensorflow<1.11"
             keras: "keras==2.2.4"
           - python-version: 3.6
             tensorflow: "tensorflow<1.10"
             keras: "keras==2.2.2"
-          - python-version: 3.6
-            # causes segmentation fault, why?
-            tensorflow: "tensorflow<1.9"
-            keras: "keras==2.2.0"
+          # - python-version: 3.6
+          #   # causes segmentation fault...
+          #   tensorflow: "tensorflow<1.9"
+          #   keras: "keras==2.2.0"
           - python-version: 3.6
             tensorflow: "tensorflow<1.8"
             keras: "keras==2.2.0"

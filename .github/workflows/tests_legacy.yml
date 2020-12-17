@@ -1,9 +1,8 @@
 name: Test (Legacy)
 
 on:
-  push:
-    branches:
-      - master
+  schedule:
+    - cron: "0 18 * * 5"
 
 jobs:
   test-legacy:
@@ -62,5 +61,5 @@ jobs:
       - run: pip install pytest
       - run: pip install "${{ matrix.tensorflow }}" "${{ matrix.keras }}"
       - uses: actions/checkout@v2
-      - run: pip install .
+      - run: pip install csbdeep
       - run: pytest -v --durations=50

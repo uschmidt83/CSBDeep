@@ -4,24 +4,52 @@ on: [push, pull_request]
 
 jobs:
   test-legacy:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    name: Legacy (${{ matrix.tensorflow }}, ${{ matrix.keras }})
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-latest, windows-latest, macos-latest]
-        # os: [ubuntu-latest]
-        # python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
-        # tensorflow: ["tensorflow", "tensorflow<2"]
-        # exclude:
-        #   - python-version: 3.8
-        #     tensorflow: "tensorflow<2"
-        #   - python-version: 2.7
-        #     tensorflow: "tensorflow"
+        # As a general rule, the latest release of Keras is compatible with the latest
+        # release of TensorFlow as well as the previous release of TensorFlow (in most
+        # cases, it is actually compatible with several prior TF releases, but that is
+        # not guaranteed).
+        #
+        # -- https://github.com/keras-team/keras/issues/10440#issuecomment-397428200
         include:
-          - os: ubuntu-latest
-            python-version: 3.6
+          - python-version: 3.6
             tensorflow: "tensorflow<1.15"
             keras: "keras==2.3.0"
+          - python-version: 3.6
+            tensorflow: "tensorflow<1.14"
+            keras: "keras==2.2.5"
+          - python-version: 3.6
+            tensorflow: "tensorflow<1.13"
+            keras: "keras==2.2.5"
+          - python-version: 3.6
+            tensorflow: "tensorflow<1.12"
+            keras: "keras==2.2.5"
+          - python-version: 3.6
+            # tensorflow 1.10 requires numpy <= 1.14.5, which causes problems -> not supported
+            # https://github.com/tensorflow/tensorflow/blob/v1.10.1/tensorflow/tools/pip_package/setup.py#L54
+            tensorflow: "tensorflow<1.11"
+            keras: "keras==2.2.4"
+          - python-version: 3.6
+            tensorflow: "tensorflow<1.10"
+            keras: "keras==2.2.2"
+          - python-version: 3.6
+            # causes segmentation fault, why?
+            tensorflow: "tensorflow<1.9"
+            keras: "keras==2.2.0"
+          - python-version: 3.6
+            tensorflow: "tensorflow<1.8"
+            keras: "keras==2.2.0"
+          - python-version: 3.6
+            tensorflow: "tensorflow<1.8"
+            keras: "keras==2.1.6"
+          - python-version: 3.6
+            # lowest supported keras version, last tensorflow release that supports CUDA 8
+            tensorflow: "tensorflow==1.4.1"
+            keras: "keras==2.1.2"
 
     steps:
       - uses: actions/setup-python@v2
@@ -29,7 +57,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip wheel setuptools
       - run: pip install pytest
-      - run: pip install "${{ matrix.tensorflow }}"
+      - run: pip install "${{ matrix.tensorflow }}" "${{ matrix.keras }}"
       - uses: actions/checkout@v2
       - run: pip install .
       - run: pytest -v --durations=50

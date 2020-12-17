@@ -16,6 +16,9 @@ jobs:
             tensorflow: "tensorflow<2"
           - python-version: 2.7
             tensorflow: "tensorflow"
+          - python-version: 2.7
+            tensorflow: "tensorflow<2"
+            os: windows-latest
 
     steps:
       - uses: actions/setup-python@v2
